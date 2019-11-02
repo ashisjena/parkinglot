@@ -39,19 +39,9 @@ public class Settings {
     }
   }
 
-  public Integer getIntProperty(final String propertyName, final int defaultValue) {
-    final Optional<Integer> result = this.getIntProperty(propertyName);
-    return result.isPresent() ? result.get() : defaultValue;
-  }
-
   public Optional<Integer> getIntProperty(final String propertyName) {
     final Optional<String> result = this.getProperty(propertyName);
     return result.isPresent() ? Optional.of(Integer.parseInt(result.get())) : Optional.empty();
-  }
-
-  public String getProperty(final String propertyName, final String defaultValue) {
-    final Optional<String> result = this.getProperty(propertyName);
-    return result.isPresent() ? result.get() : defaultValue;
   }
 
   public Optional<String> getProperty(final String propertyName) {
