@@ -49,5 +49,11 @@ public class SettingsMockUtils {
     lenient().when(settingsMock.getProperty("command.list_all.vehicles_with_color")).thenReturn(Optional.of("registration_numbers_for_cars_with_colour"));
     lenient().when(settingsMock.getProperty("command.list_all_slot_numbers.vehicles_with_color")).thenReturn(Optional.of("slot_numbers_for_cars_with_colour"));
     lenient().when(settingsMock.getProperty("command.slot_number.vehicle_registration_number")).thenReturn(Optional.of("slot_number_for_registration_number"));
+    lenient().when(settingsMock.getProperty("errormsg.parking.full")).thenReturn(Optional.of("Sorry, parking lot is full"));
+    lenient().when(settingsMock.getProperty("errormsg.vehicle.notfound")).thenReturn(Optional.of("Vehicle with registration number %s not found"));
+    lenient().when(settingsMock.getProperty("errormsg.parkingslot.notempty")).thenReturn(Optional.of("Parking slot %d is not empty"));
+    lenient().when(settingsMock.getProperty("errormsg.parkingslot.isempty")).thenReturn(Optional.of("Parking slot %d is already empty"));
+    lenient().when(settingsMock.getProperty("errormsg.unknown.command")).thenReturn(Optional.of("Unknown command %s received"));
+    lenient().when(settingsMock.getProperty("errormsg.duplicate.vehicle_regno")).thenReturn(Optional.of("Vehicle has duplicate registration no %s"));
   }
 }

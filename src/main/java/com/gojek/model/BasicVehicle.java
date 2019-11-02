@@ -1,5 +1,7 @@
 package com.gojek.model;
 
+import java.util.Objects;
+
 public abstract class BasicVehicle implements Vehicle {
   private final String registrationNo;
   private final String color;
@@ -24,5 +26,18 @@ public abstract class BasicVehicle implements Vehicle {
   @Override
   public int getRequiredParkingSlots() {
     return requiredParkingSlots;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (!(o instanceof BasicVehicle)) return false;
+    BasicVehicle that = (BasicVehicle) o;
+    return Objects.equals(getRegistrationNo(), that.getRegistrationNo());
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(getRegistrationNo());
   }
 }
