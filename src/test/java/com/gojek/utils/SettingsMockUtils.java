@@ -55,5 +55,16 @@ public class SettingsMockUtils {
     lenient().when(settingsMock.getProperty("errormsg.parkingslot.isempty")).thenReturn(Optional.of("Parking slot %d is already empty"));
     lenient().when(settingsMock.getProperty("errormsg.unknown.command")).thenReturn(Optional.of("Unknown command %s received"));
     lenient().when(settingsMock.getProperty("errormsg.duplicate.vehicle_regno")).thenReturn(Optional.of("Vehicle has duplicate registration no %s"));
+    lenient().when(settingsMock.getProperty("errormsg.listregno.color.notfound")).thenReturn(Optional.of("No Vehicles found with color %s"));
+    lenient().when(settingsMock.getProperty("errormsg.listslotno.color.notfound")).thenReturn(Optional.of("No Slots found for color %s"));
+    lenient().when(settingsMock.getProperty("errormsg.slotno.regno.notfound")).thenReturn(Optional.of("Not found"));
+    lenient().when(settingsMock.getProperty("errormsg.slotno.invalid")).thenReturn(Optional.of("Invalid slot"));
+    lenient().when(settingsMock.getProperty("msg.create.parkinglot")).thenReturn(Optional.of("Created a parking lot with %d slots"));
+    lenient().when(settingsMock.getProperty("msg.park.vehicle")).thenReturn(Optional.of("Allocated slot number: %d"));
+    lenient().when(settingsMock.getProperty("msg.leave.parkinglot")).thenReturn(Optional.of("Slot number %d is free"));
+    lenient().when(settingsMock.getProperty("msg.status.heading")).thenReturn(Optional.of("Slot No.\tRegistration No\tColour"));
+    lenient().when(settingsMock.getProperty("msg.status.body")).thenReturn(Optional.of("%d\t%s\t%s"));
+    lenient().when(settingsMock.getProperty("msg.status.empty")).thenReturn(Optional.of("Parking lot is empty"));
+    lenient().when(settingsMock.getProperty("regex.registration.number")).thenReturn(Optional.of("[A-Za-z]{2}-\\d{2}-[A-Za-z]{1,2}-\\d{3,4}"));
   }
 }

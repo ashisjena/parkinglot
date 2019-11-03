@@ -7,11 +7,11 @@ public class ParkingDAOFactory<T extends Vehicle> {
 
   private static ParkingDAOFactory INSTANCE;
 
-  public static ParkingDAOFactory getInstance() {
+  public static <T extends Vehicle> ParkingDAOFactory<T> getInstance() {
     if (INSTANCE == null) {
       synchronized (ParkingDAOFactory.class) {
         if (INSTANCE == null) {
-          INSTANCE = new ParkingDAOFactory();
+          INSTANCE = new ParkingDAOFactory<T>();
         }
       }
     }
@@ -27,7 +27,7 @@ public class ParkingDAOFactory<T extends Vehicle> {
   public final ParkingDAO<T> getParkingDAO(final int capacity, final ParkingStructure parkingStructure, final DAOType type) {
     switch (type) {
       case IN_MEMORY:
-        return ParkingDAOInMemoryImpl.getInstance(capacity, parkingStructure);
+        return new ParkingDAOInMemoryImpl(capacity, parkingStructure);
       default:
         throw new RuntimeException("Invalid Type, Error creating Parking DAO");
     }

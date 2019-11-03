@@ -1,4 +1,4 @@
-package com.gojek.constants;
+package com.gojek.service.action.constants;
 
 import com.gojek.utils.Settings;
 
@@ -11,7 +11,8 @@ public enum Command {
   STATUS(Settings.get().getProperty("command.status.parking_lot").orElse("status")),
   LIST_VEHICLES_WITH_COLOR(Settings.get().getProperty("command.list_all.vehicles_with_color").orElse("registration_numbers_for_cars_with_colour")),
   SLOT_NUMBERS_FOR_VEHICLES_WITH_COLOR(Settings.get().getProperty("command.list_all_slot_numbers.vehicles_with_color").orElse("slot_numbers_for_cars_with_colour")),
-  SLOT_NUMBER_FOR_REGISTRATION_NUMBER(Settings.get().getProperty("command.slot_number.vehicle_registration_number").orElse("slot_number_for_registration_number"));
+  SLOT_NUMBER_FOR_REGISTRATION_NUMBER(Settings.get().getProperty("command.slot_number.vehicle_registration_number").orElse("slot_number_for_registration_number")),
+  DEFAULT_COMMAND("Unknown command");
 
   private final String value;
 
@@ -23,14 +24,10 @@ public enum Command {
     return value;
   }
 
-  public static Command getCommand(final String command) throws CommandNotFoundException {
+  public static Command getCommand(final String command) {
     return Arrays.stream(values())
             .filter(cmd -> cmd.getValue().equals(command))
             .findFirst()
-            .orElseThrow(() -> new CommandNotFoundException(
-                    String.format(
-                            Settings.get().getProperty("errormsg.unknown.command").orElse("ERROR: Unknown command %s"),
-                            command)
-            ));
+            .orElse(Command.DEFAULT_COMMAND);
   }
 }

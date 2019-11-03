@@ -1,4 +1,4 @@
-package com.gojek.constants;
+package com.gojek.service.action;
 
 import com.gojek.ParkingException;
 

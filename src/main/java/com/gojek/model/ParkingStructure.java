@@ -13,6 +13,10 @@ public class ParkingStructure {
     this.availableParkingSlots.add(parkingNumber);
   }
 
+  public int peekNextParking() {
+    return this.availableParkingSlots.first();
+  }
+
   public int assignParking() {
     final int nearestParking = this.availableParkingSlots.first();
     this.availableParkingSlots.remove(nearestParking);

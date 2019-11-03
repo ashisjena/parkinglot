@@ -6,4 +6,8 @@ public interface Vehicle {
   String getColor();
 
   int getRequiredParkingSlots();
+
+  Integer getAssignedParkingSlot();
+
+  void setAssignedParkingSlot(Integer assignedParkingSlot);
 }

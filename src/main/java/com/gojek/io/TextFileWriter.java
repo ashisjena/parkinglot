@@ -23,6 +23,7 @@ public class TextFileWriter implements OutputWriter {
   @Override
   public void write(final String line) throws IOException {
     this.writer.write(line);
+    this.writer.write(System.lineSeparator());
   }
 
   @Override

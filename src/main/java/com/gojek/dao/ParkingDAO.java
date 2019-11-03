@@ -11,7 +11,7 @@ public interface ParkingDAO<T extends Vehicle> {
 
   int parkVehicle(T vehicle) throws NoParkingAvailableException, ParkingSlotIsNotEmptyException, DuplicateVehicleRegNoException;
 
-  T leaveVehicle(int parkingNumber) throws EmptyParkingSlotException;
+  T leaveVehicle(int parkingNumber) throws EmptyParkingSlotException, InvalidParkingSlotException;
 
   List<T> listAllVehicles();
 

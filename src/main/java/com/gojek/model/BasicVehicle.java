@@ -6,6 +6,7 @@ public abstract class BasicVehicle implements Vehicle {
   private final String registrationNo;
   private final String color;
   private final int requiredParkingSlots;
+  private Integer assignedParkingSlot;
 
   protected BasicVehicle(final String registrationNo, final String color, final int requiredParkingSlots) {
     this.registrationNo = registrationNo;
@@ -26,6 +27,16 @@ public abstract class BasicVehicle implements Vehicle {
   @Override
   public int getRequiredParkingSlots() {
     return requiredParkingSlots;
+  }
+
+  @Override
+  public Integer getAssignedParkingSlot() {
+    return assignedParkingSlot;
+  }
+
+  @Override
+  public void setAssignedParkingSlot(Integer assignedParkingSlot) {
+    this.assignedParkingSlot = assignedParkingSlot;
   }
 
   @Override

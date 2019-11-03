@@ -29,7 +29,7 @@ public class ParkingDAOInMemoryImplTest {
 
   @Before
   public void setUp() {
-    this.parkingDAO = ParkingDAOInMemoryImpl.getInstanceForTEST(5, new ParkingStructure());
+    this.parkingDAO = new ParkingDAOInMemoryImpl<>(5, new ParkingStructure());
   }
 
   @Test
@@ -56,6 +56,25 @@ public class ParkingDAOInMemoryImplTest {
   }
 
   @Test
+  public void parkVehicle_ParkingFull_LeaveParking_ParkVehicle() throws ParkingException {
+    boolean wasExecuted = false;
+    try {
+      this.parkingDAO.parkVehicle(new Car("KA05JC5555", "BLACK"));
+      this.parkingDAO.parkVehicle(new Car("KA05JC5556", "BLACK"));
+      this.parkingDAO.parkVehicle(new Car("KA05JC5557", "WHITE"));
+      this.parkingDAO.parkVehicle(new Car("KA05JC5558", "BLACK"));
+      this.parkingDAO.parkVehicle(new Car("KA05JC5559", "BROWN"));
+      this.parkingDAO.parkVehicle(new Car("KA05JC5559", "BROWN"));
+    } catch (ParkingException e) {
+      this.parkingDAO.leaveVehicle(3);
+      this.parkingDAO.parkVehicle(new Car("KA05JC2345", "BLACK"));
+      Assert.assertEquals("Multiple Operations 1", 3, this.parkingDAO.getSlotNumberForVehicle("KA05JC2345"));
+      wasExecuted = true;
+    }
+    Assert.assertTrue("Multiple Operations 2", wasExecuted);
+  }
+
+  @Test
   public void parkVehicleWithDuplicateRegNo() throws ParkingException {
     this.exceptionRule.expect(DuplicateVehicleRegNoException.class);
     this.exceptionRule.expectMessage(String.format(settings.getProperty("errormsg.duplicate.vehicle_regno").get(), "KA05JC5555"));
@@ -70,10 +89,17 @@ public class ParkingDAOInMemoryImplTest {
   }
 
   @Test
-  public void leaveInvalidVehicle() throws ParkingException {
+  public void leaveUnoccupiedSlotVehicle() throws ParkingException {
     this.exceptionRule.expect(EmptyParkingSlotException.class);
     this.parkingDAO.parkVehicle(new Car("KA05JC3456", "BLACK"));
     this.parkingDAO.leaveVehicle(3).getRegistrationNo();
+  }
+
+  @Test
+  public void leaveInvalidSlotNoVehicle() throws ParkingException {
+    this.exceptionRule.expect(InvalidParkingSlotException.class);
+    this.parkingDAO.parkVehicle(new Car("KA05JC3456", "BLACK"));
+    this.parkingDAO.leaveVehicle(100).getRegistrationNo();
   }
 
   @Test
