@@ -5,6 +5,7 @@ import com.gojek.message.DefaultResponseMessage;
 import com.gojek.service.ParkingLot;
 import com.gojek.service.ParkingLotImpl;
 import com.gojek.service.action.ActionFactory;
+import com.gojek.utils.GojekTakeWhile;
 import com.gojek.utils.Settings;
 
 import java.io.IOException;
@@ -14,6 +15,9 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 
 public class Main {
+
+  public static final String EXIT = "exit";
+
   static {
     Settings.get().register();
   }
@@ -32,7 +36,7 @@ public class Main {
         writer = new TextFileWriter(Paths.get(args[2]));
       } else if (inputMode.equalsIgnoreCase("NETWORK")) {
         final Socket clientSocket = new Socket(args[1], Integer.parseInt(args[2]));
-        clientSocket.setSoTimeout(60*1000);
+        clientSocket.setSoTimeout(60 * 1000);
         reader = new NetworkReader(clientSocket);
         writer = new TextFileWriter(Paths.get(args[1]));
       } else {
@@ -41,34 +45,57 @@ public class Main {
     } catch (Exception e) {
       throw new RuntimeException(e.getMessage() +
               System.lineSeparator() +
-              "Please execute again with arguments as below" +
-              System.lineSeparator() +
-              "CONSOLE/console" +
-              System.lineSeparator() +
-              "FILE/file <input file name> <output file name>" +
-              System.lineSeparator() +
-              "NETWORK <hostname> <port> <output file name>");
+              getInstructionMsg());
     }
 
     try {
       ParkingLot parkingLot = new ParkingLotImpl(new DefaultResponseMessage<>());
-      reader.stream().forEach(command -> {
-        try {
-          writer.write(ActionFactory.getInstance().getAction(command).execute(parkingLot));
-        } catch (ParkingException | IOException e) {
-          e.printStackTrace();
+      if (reader instanceof CommandLineReader) {
+        while (true) {
+          final String command = ((CommandLineReader) reader).read();
+          if (command.equalsIgnoreCase(EXIT)) {
+            break;
+          }
+          try {
+            processAndWrite(writer, parkingLot, command);
+          } catch (ParkingException e) {
+            e.printStackTrace();
+          }
         }
-      });
+      } else {
+        GojekTakeWhile.takeWhile(reader.stream(), command -> !command.equalsIgnoreCase(EXIT)).forEach(command -> {
+          try {
+            processAndWrite(writer, parkingLot, command);
+          } catch (ParkingException | IOException e) {
+            e.printStackTrace();
+          }
+        });
+      }
     } catch (IOException e) {
       e.printStackTrace();
     } finally {
       try {
+        reader.close();
         writer.flush();
         writer.close();
       } catch (Exception e) {
         e.printStackTrace();
       }
     }
+  }
+
+  private static String getInstructionMsg() {
+    return "Please execute again with arguments as below" +
+            System.lineSeparator() +
+            "CONSOLE/console" +
+            System.lineSeparator() +
+            "FILE/file <input file name> <output file name>" +
+            System.lineSeparator() +
+            "NETWORK <hostname> <port> <output file name>";
+  }
+
+  private static void processAndWrite(OutputWriter writer, ParkingLot parkingLot, String command) throws IOException, ParkingException {
+    writer.write(ActionFactory.getInstance().getAction(command).execute(parkingLot));
   }
 
   private static Path getInputPath(String fileName) throws URISyntaxException {

@@ -6,12 +6,14 @@ public class ConsoleWriter implements OutputWriter {
   public final PrintWriter writer;
 
   public ConsoleWriter() {
-    this.writer = System.console().writer();
+    this.writer = new PrintWriter(System.out);
   }
 
   @Override
   public void write(final String line) {
     this.writer.write(line);
+    this.writer.write(System.lineSeparator());
+    this.flush();
   }
 
   @Override
