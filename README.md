@@ -1,6 +1,6 @@
 # Instructions
 
-Maven Install for Dependencies
+Maven Install for Dependencies and Running Tests
 
 ```$xslt
 mvn install
@@ -8,9 +8,9 @@ mvn install
 
 Maven execute
 ```$xslt
-### _For Console Execution_ 
+### For Console Execution 
 mvn exec:java
 
-### _For File Execution. file_path example. "D:\Work\parking_lot\target\classes\file_input.txt"_
+### For File Execution. file_path example. "D:\Work\parking_lot\target\classes\file_input.txt"
 mvn exec:java -Dexec.args=<file_path> 
 ```

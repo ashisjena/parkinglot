@@ -4,7 +4,9 @@ import com.gojek.io.*;
 import com.gojek.message.DefaultResponseMessage;
 import com.gojek.service.ParkingLot;
 import com.gojek.service.ParkingLotImpl;
+import com.gojek.service.action.AbstractCommandAction;
 import com.gojek.service.action.ActionFactory;
+import com.gojek.service.action.CommandNotFoundException;
 import com.gojek.utils.GojekTakeWhile;
 import com.gojek.utils.Settings;
 
@@ -95,7 +97,11 @@ public class Main {
   }
 
   private static void processAndWrite(OutputWriter writer, ParkingLot parkingLot, String command) throws IOException, ParkingException {
-    writer.write(ActionFactory.getInstance().getAction(command).execute(parkingLot));
+    final AbstractCommandAction action = ActionFactory.getInstance().getAction(command);
+    if (action.isValidCommand()) {
+      final String result = action.execute(parkingLot);
+      writer.write(result);
+    }
   }
 
   private static Path getInputPath(String fileName) throws URISyntaxException {
