@@ -27,18 +27,18 @@ public class Main {
     final OutputWriter writer;
 
     try {
-      String inputMode = args[0];
-      if (inputMode.equalsIgnoreCase("CONSOLE")) {
+      if (args.length == 0 || args[0].equalsIgnoreCase("CONSOLE")) {
         reader = new CommandLineReader();
         writer = new ConsoleWriter();
-      } else if (inputMode.equalsIgnoreCase("FILE")) {
-        reader = new TextFileReader(getInputPath(args[1]));
-        writer = new TextFileWriter(Paths.get(args[2]));
-      } else if (inputMode.equalsIgnoreCase("NETWORK")) {
-        final Socket clientSocket = new Socket(args[1], Integer.parseInt(args[2]));
+      } else if (args[0].equalsIgnoreCase("FILE") || args.length == 1) {
+        reader = new TextFileReader(getInputPath(args[args.length - 1]));
+        //  writer = new TextFileWriter(Paths.get(args[2]));
+        writer = new ConsoleWriter();
+      } else if (args[0].equalsIgnoreCase("NETWORK") || args.length == 2) {
+        final Socket clientSocket = new Socket(args[args.length - 2], Integer.parseInt(args[args.length - 1]));
         clientSocket.setSoTimeout(60 * 1000);
         reader = new NetworkReader(clientSocket);
-        writer = new TextFileWriter(Paths.get(args[1]));
+        writer = new ConsoleWriter();
       } else {
         throw new Exception("Invalid Input mode");
       }
@@ -89,9 +89,9 @@ public class Main {
             System.lineSeparator() +
             "CONSOLE/console" +
             System.lineSeparator() +
-            "FILE/file <input file name> <output file name>" +
+            "FILE/file <input file name>" +
             System.lineSeparator() +
-            "NETWORK <hostname> <port> <output file name>";
+            "NETWORK <hostname> <port>";
   }
 
   private static void processAndWrite(OutputWriter writer, ParkingLot parkingLot, String command) throws IOException, ParkingException {
@@ -99,6 +99,7 @@ public class Main {
   }
 
   private static Path getInputPath(String fileName) throws URISyntaxException {
-    return Paths.get(Main.class.getClassLoader().getResource("./" + fileName).toURI());
+    return Paths.get(fileName);
+    //    return Paths.get(Main.class.getClassLoader().getResource("./" + fileName).toURI());
   }
 }
