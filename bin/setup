@@ -6,4 +6,4 @@
 # After this is run, bin/parking_lot
 # should Just Work.
 
-mvn install
+mvn clean install

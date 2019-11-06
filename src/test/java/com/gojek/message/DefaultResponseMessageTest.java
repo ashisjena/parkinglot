@@ -59,9 +59,9 @@ public class DefaultResponseMessageTest {
     final Car car2 = new Car("KA-01-HH-1111", "White");
     car2.setAssignedParkingSlot(2);
 
-    final String expected = "Slot No.\tRegistration No\tColour" + System.lineSeparator() +
-            car1.getAssignedParkingSlot() + "\t" + car1.getRegistrationNo() + "\t" + car1.getColor() + System.lineSeparator() +
-            car2.getAssignedParkingSlot() + "\t" + car2.getRegistrationNo() + "\t" + car2.getColor();
+    final String expected = "Slot No.    Registration No    Colour" + System.lineSeparator() +
+            car1.getAssignedParkingSlot() + "           " + car1.getRegistrationNo() + "      " + car1.getColor() + System.lineSeparator() +
+            car2.getAssignedParkingSlot() + "           " + car2.getRegistrationNo() + "      " + car2.getColor();
 
     Assert.assertEquals("status msg", expected, this.message.statusMsg(
             Arrays.asList(new Car[]{car1, car2})));

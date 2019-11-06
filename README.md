@@ -1,13 +1,19 @@
 # Instructions
 
-Maven Install for Dependencies and Running Tests
+Maven Install for Dependencies and Running Tests.
 
-```$xslt
-mvn install
+```
+mvn clean install
 ```
 
-Maven execute
-```$xslt
+For single executable Jar.
+
+```
+mvn clean compile assembly:single
+```
+
+Maven execute.
+```
 ### For Console Execution 
 mvn exec:java
 

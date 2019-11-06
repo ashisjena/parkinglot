@@ -87,12 +87,14 @@ public class ParkingLotImplTest {
 
   @Test
   public void getStatus() throws ParkingException {
-    this.parkingLot.createParkingLot(2);
+    this.parkingLot.createParkingLot(3);
     this.parkingLot.parkVehicle("KA-01-HH-1234", "White");
-    this.parkingLot.parkVehicle("KA-01-HH-1134", "White");
-    Assert.assertEquals("parking status", "Slot No.\tRegistration No\tColour" + System.lineSeparator() +
-            "1\tKA-01-HH-1234\tWhite" + System.lineSeparator() +
-            "2\tKA-01-HH-1134\tWhite", this.parkingLot.getStatus());
+    this.parkingLot.parkVehicle("KA-01-HH-3141", "Black");
+    this.parkingLot.parkVehicle("KA-01-HH-9999", "White");
+    Assert.assertEquals("parking status", "Slot No.    Registration No    Colour" + System.lineSeparator() +
+            "1           KA-01-HH-1234      White" + System.lineSeparator() +
+            "2           KA-01-HH-3141      Black" + System.lineSeparator() +
+            "3           KA-01-HH-9999      White", this.parkingLot.getStatus());
   }
 
   @Test
