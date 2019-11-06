@@ -51,7 +51,8 @@
                 <mainClass>${exec.mainClass}</mainClass>
               </manifest>
             </archive>
-
+            <!-- Just for Demo purpose. TODO: make the below config to true -->
+            <appendAssemblyId>false</appendAssemblyId>
           </configuration>
           <executions>
             <execution>
