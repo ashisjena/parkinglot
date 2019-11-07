@@ -2,6 +2,7 @@ package com.gojek.service;
 
 import com.gojek.ParkingException;
 import com.gojek.message.DefaultResponseMessage;
+import com.gojek.model.ParkingStructure;
 import com.gojek.model.Vehicle;
 import org.junit.Assert;
 import org.junit.Before;
@@ -21,7 +22,7 @@ public class ParkingLotImplTest {
 
   @Before
   public void setUp() {
-    this.parkingLot = new ParkingLotImpl(new DefaultResponseMessage<>());
+    this.parkingLot = new ParkingLotImpl(new DefaultResponseMessage<>(), new ParkingStructure());
   }
 
   @Test

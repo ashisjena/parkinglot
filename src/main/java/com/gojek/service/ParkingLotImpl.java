@@ -16,9 +16,11 @@ public class ParkingLotImpl implements ParkingLot {
   private final ResponseMessage<Vehicle> responseMsg;
   private final ReentrantReadWriteLock.ReadLock readLock;
   private final ReentrantReadWriteLock.WriteLock writeLock;
+  private final ParkingStructure parkingStructure;
 
-  public ParkingLotImpl(ResponseMessage<Vehicle> responseMsg) {
+  public ParkingLotImpl(ResponseMessage<Vehicle> responseMsg, ParkingStructure parkingStructure) {
     this.responseMsg = responseMsg;
+    this.parkingStructure = parkingStructure;
     final ReentrantReadWriteLock lock = new ReentrantReadWriteLock();
     this.readLock = lock.readLock();
     this.writeLock = lock.writeLock();
@@ -31,7 +33,7 @@ public class ParkingLotImpl implements ParkingLot {
       if (this.parkingDAO != null) {
         throw new ParkingException("ERROR: ParkingLot already created");
       }
-      this.parkingDAO = ParkingDAOFactory.getInstance().getParkingDAO(capacity, new ParkingStructure(), DAOType.IN_MEMORY);
+      this.parkingDAO = ParkingDAOFactory.getInstance().getParkingDAO(capacity, this.parkingStructure, DAOType.IN_MEMORY);
     } finally {
       writeLock.unlock();
     }
