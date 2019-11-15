@@ -1,6 +1,7 @@
 package com.gojek.dao;
 
 import com.gojek.model.Vehicle;
+import com.gojek.service.action.DispatchStrategy;
 
 import java.util.List;
 

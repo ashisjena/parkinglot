@@ -1,5 +1,6 @@
 package com.gojek.dao;
 
+import com.gojek.ParkingException;
 import com.gojek.model.ParkingStructure;
 import com.gojek.model.Vehicle;
 import com.gojek.utils.Settings;
@@ -12,23 +13,33 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 public class ParkingDAOInMemoryImpl<T extends Vehicle> implements ParkingDAO<T> {
+  private final int id;
+
   private AtomicInteger capacity;
   private ParkingStructure parkingStructure;
   private Map<Integer, Optional<T>> slotToVehicleMap;
-
-  ParkingDAOInMemoryImpl(final int capacity, final ParkingStructure parkingStructure) {
-    init(capacity, parkingStructure);
+  ParkingDAOInMemoryImpl(int id, final int capacity, final Class<? extends ParkingStructure> parkingStructureClazz) throws ParkingException {
+    this.id = id;
+    init(capacity, parkingStructureClazz);
   }
 
-  private void init(final int capacity, final ParkingStructure parkingStructure) {
+  private void init(final int capacity, final Class<? extends ParkingStructure> parkingStructureClazz) throws ParkingException {
     this.capacity = new AtomicInteger(capacity);
-    this.parkingStructure = parkingStructure;
+    try {
+      this.parkingStructure = parkingStructureClazz.newInstance();
+    } catch (InstantiationException | IllegalAccessException e) {
+      throw new ParkingException(e);
+    }
 
     this.slotToVehicleMap = new ConcurrentHashMap<>();
     for (int slotNum = 1; slotNum <= this.capacity.get(); slotNum++) {
       this.slotToVehicleMap.put(slotNum, Optional.empty());
       this.parkingStructure.addParking(slotNum);
     }
+  }
+
+  public int getId() {
+    return id;
   }
 
   @Override
@@ -45,10 +56,10 @@ public class ParkingDAOInMemoryImpl<T extends Vehicle> implements ParkingDAO<T> 
   public int parkVehicle(final T vehicle) throws NoParkingAvailableException, DuplicateVehicleRegNoException {
     if (getRemainingSlots() == 0) {
       throw new NoParkingAvailableException(Settings.get().getProperty("errormsg.parking.full").orElse("ERROR: ParkingLot is full"));
-    } else if (isDuplicateVehicleRegistrationNo(vehicle)) {
+    }/* else if (isDuplicateVehicleRegistrationNo(vehicle)) {
       throw new DuplicateVehicleRegNoException(String.format(
               Settings.get().getProperty("errormsg.duplicate.vehicle_regno").orElse("ERROR: Duplicate Vehicle %d"), vehicle.getRegistrationNo()));
-    }
+    }*/
 
     int availableSlot = this.parkingStructure.peekNextParking();
     this.slotToVehicleMap.put(availableSlot, Optional.of(vehicle));
@@ -56,9 +67,9 @@ public class ParkingDAOInMemoryImpl<T extends Vehicle> implements ParkingDAO<T> 
     return availableSlot;
   }
 
-  private boolean isDuplicateVehicleRegistrationNo(T vehicle) {
+  /*private boolean isDuplicateVehicleRegistrationNo(T vehicle) {
     return this.slotToVehicleMap.values().stream().anyMatch(opt -> opt.isPresent() && opt.get().equals(vehicle));
-  }
+  }*/
 
   @Override
   public T leaveVehicle(final int parkingSlot) throws EmptyParkingSlotException, InvalidParkingSlotException {

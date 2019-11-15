@@ -39,7 +39,7 @@ public class MainTest {
             "Allocated slot number: 4" + System.lineSeparator() +
             "Allocated slot number: 5" + System.lineSeparator() +
             "Allocated slot number: 6" + System.lineSeparator() +
-            "Slot number 4 is free" + System.lineSeparator() +
+            "Slot number 4 is free on parking 1" + System.lineSeparator() +
             "Slot No.    Registration No    Colour" + System.lineSeparator() +
             "1           KA-01-HH-1234      White" + System.lineSeparator() +
             "2           KA-01-HH-9999      White" + System.lineSeparator() +

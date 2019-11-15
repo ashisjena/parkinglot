@@ -1,6 +1,7 @@
 package com.gojek.message;
 
 import com.gojek.model.Vehicle;
+import com.gojek.service.action.DispatchStrategy;
 
 import java.util.List;
 
@@ -15,7 +16,7 @@ public interface ResponseMessage<T extends Vehicle> {
 
   String duplicateVehicleErrorMsg(String regNo);
 
-  String leaveParkingMsg(int slot);
+  String leaveParkingMsg(int parkingLotId, int slot);
 
   String slotAlreadyEmptyErrorMsg(int slot);
 
@@ -36,4 +37,6 @@ public interface ResponseMessage<T extends Vehicle> {
   String slotNotFoundForVehicleErrorMsg();
 
   String invalidSlotErrorMsg(int slotNo);
+
+  String setDispatchRuleMsg(DispatchStrategy strategy);
 }

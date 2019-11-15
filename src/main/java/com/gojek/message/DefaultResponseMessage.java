@@ -1,6 +1,7 @@
 package com.gojek.message;
 
 import com.gojek.model.Vehicle;
+import com.gojek.service.action.DispatchStrategy;
 import com.gojek.utils.Settings;
 
 import java.util.List;
@@ -28,8 +29,8 @@ public class DefaultResponseMessage<T extends Vehicle> implements ResponseMessag
   }
 
   @Override
-  public String leaveParkingMsg(int slot) {
-    return String.format(Settings.get().getProperty("msg.leave.parkinglot").orElse(PROPERTY_NOTFOUND), slot);
+  public String leaveParkingMsg(int parkingLotId, int slot) {
+    return String.format(Settings.get().getProperty("msg.leave.parkinglot").orElse(PROPERTY_NOTFOUND), slot, parkingLotId);
   }
 
   @Override
@@ -87,5 +88,10 @@ public class DefaultResponseMessage<T extends Vehicle> implements ResponseMessag
   @Override
   public String invalidSlotErrorMsg(int slotNo) {
     return Settings.get().getProperty("errormsg.slotno.invalid").orElse(PROPERTY_NOTFOUND);
+  }
+
+  @Override
+  public String setDispatchRuleMsg(DispatchStrategy strategy) {
+    return String.format(Settings.get().getProperty("msg.dispatch.strategy").orElse(PROPERTY_NOTFOUND), strategy.getValue());
   }
 }

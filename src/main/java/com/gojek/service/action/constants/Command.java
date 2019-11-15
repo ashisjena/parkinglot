@@ -12,6 +12,7 @@ public enum Command {
   LIST_VEHICLES_WITH_COLOR(Settings.get().getProperty("command.list_all.vehicles_with_color").orElse("registration_numbers_for_cars_with_colour")),
   SLOT_NUMBERS_FOR_VEHICLES_WITH_COLOR(Settings.get().getProperty("command.list_all_slot_numbers.vehicles_with_color").orElse("slot_numbers_for_cars_with_colour")),
   SLOT_NUMBER_FOR_REGISTRATION_NUMBER(Settings.get().getProperty("command.slot_number.vehicle_registration_number").orElse("slot_number_for_registration_number")),
+  DISPATCH_RULE(Settings.get().getProperty("command.dispatch_rule").orElse("dispatch_rule")),
   DEFAULT_COMMAND("Unknown command");
 
   private final String value;

@@ -1,5 +1,6 @@
 package com.gojek.dao;
 
+import com.gojek.ParkingException;
 import com.gojek.model.ParkingStructure;
 import com.gojek.model.Vehicle;
 
@@ -25,10 +26,10 @@ public class ParkingDAOFactory<T extends Vehicle> {
     }
   }
 
-  public final ParkingDAO<T> getParkingDAO(final int capacity, final ParkingStructure parkingStructure, final DAOType type) {
+  public final ParkingDAO<T> getParkingDAO(final int capacity, final Class<? extends ParkingStructure> parkingStructureClazz, final DAOType type) throws ParkingException {
     switch (type) {
       case IN_MEMORY:
-        return new ParkingDAOInMemoryImpl<>(capacity, parkingStructure);
+        return new ParkingDAOInMemoryImpl<>(1, capacity, parkingStructureClazz);
       default:
         throw new RuntimeException("Invalid Type, Error creating Parking DAO");
     }

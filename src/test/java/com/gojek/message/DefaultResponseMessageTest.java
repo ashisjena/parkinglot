@@ -44,7 +44,7 @@ public class DefaultResponseMessageTest {
 
   @Test
   public void leaveParkingMsg() {
-    Assert.assertEquals("leave vehicle", "Slot number 8 is free", this.message.leaveParkingMsg(8));
+    Assert.assertEquals("leave vehicle", "Slot number 8 is free on parking 1", this.message.leaveParkingMsg(1, 8));
   }
 
   @Test

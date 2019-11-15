@@ -6,34 +6,33 @@ import com.gojek.message.ResponseMessage;
 import com.gojek.model.Car;
 import com.gojek.model.ParkingStructure;
 import com.gojek.model.Vehicle;
+import com.gojek.service.action.DispatchStrategy;
 
 import java.util.List;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 import java.util.stream.Collectors;
 
 public class ParkingLotImpl implements ParkingLot {
-  private ParkingDAO<Vehicle> parkingDAO;
   private final ResponseMessage<Vehicle> responseMsg;
   private final ReentrantReadWriteLock.ReadLock readLock;
   private final ReentrantReadWriteLock.WriteLock writeLock;
-  private final ParkingStructure parkingStructure;
+  private final Class<? extends ParkingStructure> parkingStructureClazz;
+  private final ParkingManagerDAO parkingManagerDAO;
 
-  public ParkingLotImpl(ResponseMessage<Vehicle> responseMsg, ParkingStructure parkingStructure) {
+  public ParkingLotImpl(ResponseMessage<Vehicle> responseMsg, Class<? extends ParkingStructure> parkingStructureClass) {
     this.responseMsg = responseMsg;
-    this.parkingStructure = parkingStructure;
+    this.parkingStructureClazz = parkingStructureClass;
     final ReentrantReadWriteLock lock = new ReentrantReadWriteLock();
     this.readLock = lock.readLock();
     this.writeLock = lock.writeLock();
+    this.parkingManagerDAO = new ParkingManagerDAO();
   }
 
   @Override
   public String createParkingLot(int capacity) throws ParkingException {
     try {
       writeLock.lock();
-      if (this.parkingDAO != null) {
-        throw new ParkingException("ERROR: ParkingLot already created");
-      }
-      this.parkingDAO = ParkingDAOFactory.getInstance().getParkingDAO(capacity, this.parkingStructure, DAOType.IN_MEMORY);
+      this.parkingManagerDAO.createParking(capacity, this.parkingStructureClazz, DAOType.IN_MEMORY);
     } finally {
       writeLock.unlock();
     }
@@ -45,7 +44,7 @@ public class ParkingLotImpl implements ParkingLot {
   public String parkVehicle(String regNo, String color) {
     try {
       writeLock.lock();
-      final int allocatedSlot = this.parkingDAO.parkVehicle(new Car(regNo, color));
+      final int allocatedSlot = this.parkingManagerDAO.parkVehicle(new Car(regNo, color));
       return this.responseMsg.parkVehicleMsg(allocatedSlot);
     } catch (DuplicateVehicleRegNoException e) {
       return this.responseMsg.duplicateVehicleErrorMsg(regNo);
@@ -60,8 +59,8 @@ public class ParkingLotImpl implements ParkingLot {
   public String leaveParking(int id, int slotNo) {
     try {
       writeLock.lock();
-      this.parkingDAO.leaveVehicle(slotNo);
-      return this.responseMsg.leaveParkingMsg(slotNo);
+      this.parkingManagerDAO.leaveVehicle(id, slotNo);
+      return this.responseMsg.leaveParkingMsg(id, slotNo);
     } catch (EmptyParkingSlotException e) {
       return this.responseMsg.slotAlreadyEmptyErrorMsg(slotNo);
     } catch (InvalidParkingSlotException e) {
@@ -75,7 +74,7 @@ public class ParkingLotImpl implements ParkingLot {
   public String getStatus() {
     try {
       readLock.lock();
-      final List<Vehicle> vehicles = this.parkingDAO.listAllVehicles();
+      final List<Vehicle> vehicles = this.parkingManagerDAO.listAllVehicles();
       if (vehicles.size() == 0) {
         return this.responseMsg.parkingLotEmptyMsg();
       } else {
@@ -90,7 +89,7 @@ public class ParkingLotImpl implements ParkingLot {
   public String getVehicleRegNosForColor(String color) {
     try {
       readLock.lock();
-      final List<Vehicle> vehicles = this.parkingDAO.listVehiclesWithColor(color);
+      final List<Vehicle> vehicles = this.parkingManagerDAO.listVehiclesWithColor(color);
       if (vehicles.size() == 0) {
         return this.responseMsg.vehiclesNotFoundForColorErrorMsg(color);
       } else {
@@ -106,7 +105,7 @@ public class ParkingLotImpl implements ParkingLot {
   public String getSlotNosForVehicleColor(String color) {
     try {
       readLock.lock();
-      final List<Integer> slots = this.parkingDAO.listSlotsWithVehicleColor(color);
+      final List<Integer> slots = this.parkingManagerDAO.listSlotsWithVehicleColor(color);
       if (slots.size() == 0) {
         return this.responseMsg.slotsNotFoundWithVehicleColorErrorMsg(color);
       } else {
@@ -121,12 +120,23 @@ public class ParkingLotImpl implements ParkingLot {
   public String getSlotNoForVehicle(String regNo) {
     try {
       readLock.lock();
-      final int slot = this.parkingDAO.getSlotNumberForVehicle(regNo);
+      final int slot = this.parkingManagerDAO.getSlotNumberForVehicle(regNo);
       return this.responseMsg.slotForVehicleMsg(slot);
     } catch (VehicleNotFoundException e) {
       return this.responseMsg.slotNotFoundForVehicleErrorMsg();
     } finally {
       readLock.unlock();
     }
+  }
+
+  @Override
+  public String setDispatchRule(DispatchStrategy strategy) {
+    try{
+      writeLock.lock();
+      this.parkingManagerDAO.setDispatchStrategy(strategy);
+    } finally {
+      writeLock.unlock();
+    }
+    return this.responseMsg.setDispatchRuleMsg(strategy);
   }
 }

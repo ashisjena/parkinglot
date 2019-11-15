@@ -1,6 +1,7 @@
 package com.gojek.service;
 
 import com.gojek.ParkingException;
+import com.gojek.service.action.DispatchStrategy;
 
 public interface ParkingLot {
   String createParkingLot(int capacity) throws ParkingException;
@@ -16,4 +17,6 @@ public interface ParkingLot {
   String getSlotNosForVehicleColor(String color);
 
   String getSlotNoForVehicle(String regNo);
+
+  String setDispatchRule(DispatchStrategy strategy);
 }

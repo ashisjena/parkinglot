@@ -61,10 +61,11 @@ public class SettingsMockUtils {
     lenient().when(settingsMock.getProperty("errormsg.slotno.invalid")).thenReturn(Optional.of("Invalid slot"));
     lenient().when(settingsMock.getProperty("msg.create.parkinglot")).thenReturn(Optional.of("Created a parking lot with %d slots"));
     lenient().when(settingsMock.getProperty("msg.park.vehicle")).thenReturn(Optional.of("Allocated slot number: %d"));
-    lenient().when(settingsMock.getProperty("msg.leave.parkinglot")).thenReturn(Optional.of("Slot number %d is free"));
+    lenient().when(settingsMock.getProperty("msg.leave.parkinglot")).thenReturn(Optional.of("Slot number %d is free on parking %d"));
     lenient().when(settingsMock.getProperty("msg.status.heading")).thenReturn(Optional.of("Slot No.    Registration No    Colour"));
     lenient().when(settingsMock.getProperty("msg.status.body")).thenReturn(Optional.of("%-12d%-19s%s"));
     lenient().when(settingsMock.getProperty("msg.status.empty")).thenReturn(Optional.of("Parking lot is empty"));
+    lenient().when(settingsMock.getProperty("msg.dispatch.strategy")).thenReturn(Optional.of("Dispatch rule set to %s"));
     lenient().when(settingsMock.getProperty("regex.registration.number")).thenReturn(Optional.of("[A-Za-z]{2}-\\d{2}-[A-Za-z]{1,2}-\\d{3,4}"));
   }
 }

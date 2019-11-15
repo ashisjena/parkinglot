@@ -31,7 +31,7 @@ public class Main {
   }
 
   public static void execute(InputReader reader, OutputWriter writer) throws IOException {
-    final ParkingLot parkingLot = new ParkingLotImpl(new DefaultResponseMessage<>(), new ParkingStructure());
+    final ParkingLot parkingLot = new ParkingLotImpl(new DefaultResponseMessage<>(), ParkingStructure.class);
     GojekTakeWhile.takeWhile(reader.stream(), command -> !command.equalsIgnoreCase(EXIT)).forEach(command -> {
       try {
         final AbstractCommandAction action = ActionFactory.getInstance().getAction(command);
