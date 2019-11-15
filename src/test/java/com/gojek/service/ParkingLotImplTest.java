@@ -3,13 +3,10 @@ package com.gojek.service;
 import com.gojek.ParkingException;
 import com.gojek.message.DefaultResponseMessage;
 import com.gojek.model.ParkingStructure;
-import com.gojek.model.Vehicle;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
-
-import static org.junit.Assert.*;
 
 public class ParkingLotImplTest {
 
@@ -62,28 +59,28 @@ public class ParkingLotImplTest {
     this.parkingLot.createParkingLot(2);
     this.parkingLot.parkVehicle("KA-01-HH-1234", "White");
     this.parkingLot.parkVehicle("KA-01-HH-1134", "White");
-    Assert.assertEquals("Leave parking", "Slot number 2 is free", this.parkingLot.leaveParking(2));
+    Assert.assertEquals("Leave parking", "Slot number 2 is free", this.parkingLot.leaveParking(1, 2));
   }
 
   @Test
   public void leaveEmptyParking() throws ParkingException {
     this.parkingLot.createParkingLot(2);
     this.parkingLot.parkVehicle("KA-01-HH-1234", "White");
-    Assert.assertEquals("Leave empty parking", "Parking slot 2 is already empty", this.parkingLot.leaveParking(2));
+    Assert.assertEquals("Leave empty parking", "Parking slot 2 is already empty", this.parkingLot.leaveParking(1, 2));
   }
 
   @Test
   public void leaveInvalidParking() throws ParkingException {
     this.parkingLot.createParkingLot(2);
     this.parkingLot.parkVehicle("KA-01-HH-1234", "White");
-    Assert.assertEquals("Leave Invalid parking", "Invalid slot", this.parkingLot.leaveParking(5));
+    Assert.assertEquals("Leave Invalid parking", "Invalid slot", this.parkingLot.leaveParking(1, 5));
   }
 
   @Test
   public void leaveUnoccupiedParking() throws ParkingException {
     this.parkingLot.createParkingLot(2);
     this.parkingLot.parkVehicle("KA-01-HH-1234", "White");
-    Assert.assertEquals("Leave Unoccupied parking", "Parking slot 2 is already empty", this.parkingLot.leaveParking(2));
+    Assert.assertEquals("Leave Unoccupied parking", "Parking slot 2 is already empty", this.parkingLot.leaveParking(1, 2));
   }
 
   @Test

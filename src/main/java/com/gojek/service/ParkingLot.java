@@ -7,7 +7,7 @@ public interface ParkingLot {
 
   String parkVehicle(String regNo, String color);
 
-  String leaveParking(int slotNo);
+  String leaveParking(int id, int slotNo);
 
   String getStatus();
 

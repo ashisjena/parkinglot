@@ -57,7 +57,7 @@ public class ParkingLotImpl implements ParkingLot {
   }
 
   @Override
-  public String leaveParking(int slotNo) {
+  public String leaveParking(int id, int slotNo) {
     try {
       writeLock.lock();
       this.parkingDAO.leaveVehicle(slotNo);

@@ -16,6 +16,6 @@ public class LeaveVehicleCommand extends AbstractCommandAction {
 
   @Override
   public String execute(ParkingLot parkingLot) {
-    return parkingLot.leaveParking(Integer.parseInt(getInputCommands()[1]));
+    return parkingLot.leaveParking(1, Integer.parseInt(getInputCommands()[1]));
   }
 }
