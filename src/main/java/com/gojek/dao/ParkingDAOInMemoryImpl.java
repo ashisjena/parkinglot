@@ -13,13 +13,11 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 public class ParkingDAOInMemoryImpl<T extends Vehicle> implements ParkingDAO<T> {
-  private final int id;
-
   private AtomicInteger capacity;
   private ParkingStructure parkingStructure;
   private Map<Integer, Optional<T>> slotToVehicleMap;
-  ParkingDAOInMemoryImpl(int id, final int capacity, final Class<? extends ParkingStructure> parkingStructureClazz) throws ParkingException {
-    this.id = id;
+
+  ParkingDAOInMemoryImpl(final int capacity, final Class<? extends ParkingStructure> parkingStructureClazz) throws ParkingException {
     init(capacity, parkingStructureClazz);
   }
 
@@ -36,10 +34,6 @@ public class ParkingDAOInMemoryImpl<T extends Vehicle> implements ParkingDAO<T> 
       this.slotToVehicleMap.put(slotNum, Optional.empty());
       this.parkingStructure.addParking(slotNum);
     }
-  }
-
-  public int getId() {
-    return id;
   }
 
   @Override

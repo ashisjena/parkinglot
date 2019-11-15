@@ -29,7 +29,7 @@ public class ParkingDAOInMemoryImplTest {
 
   @Before
   public void setUp() throws ParkingException {
-    this.parkingDAO = new ParkingDAOInMemoryImpl<>(1, 5, ParkingStructure.class);
+    this.parkingDAO = new ParkingDAOInMemoryImpl<>(5, ParkingStructure.class);
   }
 
   @Test

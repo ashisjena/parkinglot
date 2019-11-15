@@ -23,7 +23,7 @@ public class DispatchRuleCommandTest {
 
   @Test
   public void isValidCommandFillFirst() {
-    DispatchRuleCommand dispatchRule = new DispatchRuleCommand("dispatch_rule even_distribution");
+    DispatchRuleCommand dispatchRule = new DispatchRuleCommand("dispatch_rule fill_first");
     Assert.assertTrue(dispatchRule.isValidCommand());
   }
 

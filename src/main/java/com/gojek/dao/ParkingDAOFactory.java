@@ -29,7 +29,7 @@ public class ParkingDAOFactory<T extends Vehicle> {
   public final ParkingDAO<T> getParkingDAO(final int capacity, final Class<? extends ParkingStructure> parkingStructureClazz, final DAOType type) throws ParkingException {
     switch (type) {
       case IN_MEMORY:
-        return new ParkingDAOInMemoryImpl<>(1, capacity, parkingStructureClazz);
+        return new ParkingDAOInMemoryImpl<>(capacity, parkingStructureClazz);
       default:
         throw new RuntimeException("Invalid Type, Error creating Parking DAO");
     }

@@ -16,7 +16,7 @@ public class ParkingManagerDAO {
   private LinkedHashMap<Integer, ParkingDAO<Vehicle>> parkingLotMaps;
   private AtomicInteger latestId = new AtomicInteger(0);
   private DispatchStrategy strategy;
-  
+
   public ParkingManagerDAO() {
     this.parkingLotMaps = new LinkedHashMap<>();
   }
