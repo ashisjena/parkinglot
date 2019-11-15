@@ -51,9 +51,6 @@ public class ParkingLotImpl implements ParkingLot {
       return this.responseMsg.duplicateVehicleErrorMsg(regNo);
     } catch (NoParkingAvailableException e) {
       return this.responseMsg.parkingLotFullErrorMsg();
-    } catch (ParkingSlotIsNotEmptyException e) {
-      // TODO: break loop after retry threshold.
-      return parkVehicle(regNo, color);
     } finally {
       writeLock.unlock();
     }

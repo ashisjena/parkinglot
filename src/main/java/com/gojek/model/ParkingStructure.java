@@ -22,4 +22,8 @@ public class ParkingStructure {
     this.availableParkingSlots.remove(nearestParking);
     return nearestParking;
   }
+
+  public int getRemainingParkingSlots() {
+    return this.availableParkingSlots.size();
+  }
 }

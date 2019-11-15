@@ -4,6 +4,11 @@ import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
+import java.security.AccessController;
+import java.security.PrivilegedAction;
+
 public class ActionFactoryTest {
 
   private static ActionFactory factory;
@@ -57,4 +62,20 @@ public class ActionFactoryTest {
   public void throwExceptionForUnknownCommand() throws CommandNotFoundException {
     factory.getAction("blah blah");
   }
+
+  @Test(expected = InvocationTargetException.class)
+  public void createInstanceThroughReflection() throws IllegalAccessException, InvocationTargetException, InstantiationException {
+    ActionFactory.getInstance();
+    Constructor<ActionFactory> defaultConstructor = AccessController.doPrivileged((PrivilegedAction<Constructor<ActionFactory>>) () -> {
+      Constructor<ActionFactory> constructor = null;
+      try {
+        constructor = ActionFactory.class.getDeclaredConstructor();
+        constructor.setAccessible(true);
+      } catch (NoSuchMethodException e) {
+      }
+      return constructor;
+    });
+    defaultConstructor.newInstance();
+  }
+
 }

@@ -9,7 +9,7 @@ public interface ParkingDAO<T extends Vehicle> {
 
   int getCapacity();
 
-  int parkVehicle(T vehicle) throws NoParkingAvailableException, ParkingSlotIsNotEmptyException, DuplicateVehicleRegNoException;
+  int parkVehicle(T vehicle) throws NoParkingAvailableException, DuplicateVehicleRegNoException;
 
   T leaveVehicle(int parkingNumber) throws EmptyParkingSlotException, InvalidParkingSlotException;
 

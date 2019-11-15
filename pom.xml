@@ -31,6 +31,12 @@
       <version>3.1.0</version>
       <scope>test</scope>
     </dependency>
+    <dependency>
+      <groupId>io.takari.junit</groupId>
+      <artifactId>takari-cpsuite</artifactId>
+      <version>1.2.7</version>
+      <scope>test</scope>
+    </dependency>
   </dependencies>
 
   <build>
@@ -81,7 +87,7 @@
         </plugin>
         <plugin>
           <artifactId>maven-surefire-plugin</artifactId>
-          <version>2.22.1</version>
+          <version>3.0.0-M1</version>
         </plugin>
         <plugin>
           <artifactId>maven-jar-plugin</artifactId>

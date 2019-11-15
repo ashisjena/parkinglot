@@ -13,17 +13,15 @@ import java.util.stream.Collectors;
 
 public class ParkingDAOInMemoryImpl<T extends Vehicle> implements ParkingDAO<T> {
   private AtomicInteger capacity;
-  private AtomicInteger remainingSlots;
   private ParkingStructure parkingStructure;
   private Map<Integer, Optional<T>> slotToVehicleMap;
 
-  public ParkingDAOInMemoryImpl(final int capacity, final ParkingStructure parkingStructure) {
+  ParkingDAOInMemoryImpl(final int capacity, final ParkingStructure parkingStructure) {
     init(capacity, parkingStructure);
   }
 
   private void init(final int capacity, final ParkingStructure parkingStructure) {
     this.capacity = new AtomicInteger(capacity);
-    this.remainingSlots = new AtomicInteger(capacity);
     this.parkingStructure = parkingStructure;
 
     this.slotToVehicleMap = new ConcurrentHashMap<>();
@@ -35,7 +33,7 @@ public class ParkingDAOInMemoryImpl<T extends Vehicle> implements ParkingDAO<T> 
 
   @Override
   public int getRemainingSlots() {
-    return this.remainingSlots.get();
+    return this.parkingStructure.getRemainingParkingSlots();
   }
 
   @Override
@@ -44,8 +42,8 @@ public class ParkingDAOInMemoryImpl<T extends Vehicle> implements ParkingDAO<T> 
   }
 
   @Override
-  public int parkVehicle(final T vehicle) throws NoParkingAvailableException, ParkingSlotIsNotEmptyException, DuplicateVehicleRegNoException {
-    if (this.remainingSlots.get() == 0) {
+  public int parkVehicle(final T vehicle) throws NoParkingAvailableException, DuplicateVehicleRegNoException {
+    if (getRemainingSlots() == 0) {
       throw new NoParkingAvailableException(Settings.get().getProperty("errormsg.parking.full").orElse("ERROR: ParkingLot is full"));
     } else if (isDuplicateVehicleRegistrationNo(vehicle)) {
       throw new DuplicateVehicleRegNoException(String.format(
@@ -53,12 +51,7 @@ public class ParkingDAOInMemoryImpl<T extends Vehicle> implements ParkingDAO<T> 
     }
 
     int availableSlot = this.parkingStructure.peekNextParking();
-    if (this.slotToVehicleMap.get(availableSlot).isPresent()) {
-      throw new ParkingSlotIsNotEmptyException(
-              String.format(Settings.get().getProperty("errormsg.parkingslot.notempty").orElse("ERROR: Slot %d not empty"), availableSlot));
-    }
     this.slotToVehicleMap.put(availableSlot, Optional.of(vehicle));
-    this.remainingSlots.decrementAndGet();
     vehicle.setAssignedParkingSlot(this.parkingStructure.assignParking());
     return availableSlot;
   }
@@ -76,7 +69,6 @@ public class ParkingDAOInMemoryImpl<T extends Vehicle> implements ParkingDAO<T> 
     this.slotToVehicleMap.get(parkingSlot).orElseThrow(() -> new EmptyParkingSlotException(
             String.format(Settings.get().getProperty("errormsg.parkingslot.isempty").orElse("ERROR: Slot %d already empty"), parkingSlot)));
 
-    this.remainingSlots.incrementAndGet();
     this.parkingStructure.addParking(parkingSlot);
     final T result = this.slotToVehicleMap.get(parkingSlot).get();
     this.slotToVehicleMap.put(parkingSlot, Optional.empty());
